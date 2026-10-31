@@ -67,16 +67,41 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  // Notice card (dummy data)
-  Widget _noticeCard(String tag, Color tagBg, Color tagText, String date,
-      String title, String subtitle) {
+    // Small feature chip used in the About card
+  Widget _featureChip(IconData icon, String label) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 22),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDark,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // About card shown at the bottom of Home
+  Widget _aboutCard() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
             color: Color(0x0D000000),
@@ -89,47 +114,46 @@ class HomeTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: tagBg,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  tag,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: tagText,
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primary, AppColors.secondary],
                   ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
+                child: const Icon(Icons.location_city,
+                    color: Colors.white, size: 26),
               ),
+              const SizedBox(width: 12),
               Text(
-                date,
+                t('home_about_title'),
                 style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
           Text(
-            title,
+            t('home_about_text'),
             style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
+              fontSize: 14,
+              height: 1.5,
+              color: AppColors.textLight,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: const TextStyle(fontSize: 13, color: AppColors.textLight),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              _featureChip(Icons.campaign, t('home_feat_notices')),
+              _featureChip(Icons.build, t('home_feat_services')),
+              _featureChip(Icons.map, t('home_feat_places')),
+              _featureChip(Icons.report_problem, t('home_feat_report')),
+            ],
           ),
         ],
       ),
@@ -205,23 +229,7 @@ class HomeTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 14),
-
-            // Location
-            const Row(
-              children: [
-                Icon(Icons.location_on_outlined,
-                    color: AppColors.primary, size: 20),
-                SizedBox(width: 6),
-                Text(
-                  'Your Area, City',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
+            
             const SizedBox(height: 16),
 
             // Search bar (opens the search page)
@@ -377,61 +385,8 @@ class HomeTab extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Latest notices header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  t('home_latest_notices'),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    onGoToTab(1, 'All');
-                  },
-                  child: Text(
-                    t('home_view_all'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Notice cards (dummy data)
-            GestureDetector(
-              onTap: () {
-                onGoToTab(1, 'All');
-              },
-              child: _noticeCard(
-                t('tag_important'),
-                const Color(0xFFFFF1D6),
-                const Color(0xFFB45309),
-                '08 Oct',
-                t('home_notice1_title'),
-                t('home_notice1_sub'),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                onGoToTab(1, 'All');
-              },
-              child: _noticeCard(
-                t('tag_general'),
-                const Color(0xFFE0F2F1),
-                AppColors.primary,
-                '06 Oct',
-                t('home_notice2_title'),
-                t('home_notice2_sub'),
-              ),
-            ),
+                        // About card
+            _aboutCard(),
           ],
         ),
       ),

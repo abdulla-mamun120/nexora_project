@@ -22,7 +22,7 @@ class _ProfileTabState extends State<ProfileTab> {
   String _email = '';
   String _phone = '';
   String _verification = 'unverified';
-  final String _area = 'Your Area, City';
+  
     // Current app language (kept in AppLanguage)
   String get _language => AppLanguage.current.value;
 
@@ -430,8 +430,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 child: Column(
                   children: [
                                         _infoRow(Icons.phone_outlined, t('lbl_phone'), _phone),
-                    const Divider(height: 1),
-                    _infoRow(Icons.location_on_outlined, t('lbl_area'), _area),
+                  
                     const Divider(height: 1),
                     _infoRow(Icons.email_outlined, t('lbl_email'), _email),
                   ],

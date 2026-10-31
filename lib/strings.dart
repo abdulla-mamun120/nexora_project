@@ -50,6 +50,17 @@ const Map<String, Map<String, String>> _strings = {
     'en': 'All residents are invited to the area meeting.',
     'bn': 'এলাকার সব বাসিন্দাকে সভায় আমন্ত্রণ জানানো হচ্ছে।',
   },
+    'home_about_title': {'en': 'About Nexora', 'bn': 'Nexora সম্পর্কে'},
+  'home_about_text': {
+    'en':
+        'Nexora brings everything about your area into one app. Stay updated with local notices, find trusted service providers, explore important places and reach emergency help quickly.',
+    'bn':
+        'Nexora আপনার এলাকার সব দরকারি তথ্য এক অ্যাপে এনে দেয়। স্থানীয় নোটিশ দেখুন, বিশ্বস্ত সেবাদাতা খুঁজুন, গুরুত্বপূর্ণ জায়গা চিনুন আর দ্রুত জরুরি সাহায্য নিন।',
+  },
+  'home_feat_notices': {'en': 'Notices', 'bn': 'নোটিশ'},
+  'home_feat_services': {'en': 'Services', 'bn': 'সেবা'},
+  'home_feat_places': {'en': 'Places', 'bn': 'জায়গা'},
+  'home_feat_report': {'en': 'Reports', 'bn': 'অভিযোগ'},
     // ----- Notices -----
   'notices_title': {'en': 'Notice Board', 'bn': 'নোটিশ বোর্ড'},
   'notices_search': {'en': 'Search notices', 'bn': 'নোটিশ খুঁজুন'},
