@@ -3,6 +3,7 @@ import '../app_colors.dart';
 import '../models/emergency_contact.dart';
 import '../utils/launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../strings.dart';
 
 class EmergencyScreen extends StatelessWidget {
   const EmergencyScreen({super.key});
@@ -124,9 +125,9 @@ class EmergencyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Emergency Contacts',
-          style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+          t('emg_title'),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -146,18 +147,18 @@ class EmergencyScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'In immediate danger?',
-                    style: TextStyle(
+                                    Text(
+                    t('emg_danger'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Call the national emergency number right now.',
-                    style: TextStyle(color: Colors.white70),
+                                    Text(
+                    t('emg_danger_sub'),
+                    style: const TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -166,9 +167,9 @@ class EmergencyScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => _call(context, 'National Emergency', '999'),
                       icon: const Icon(Icons.call),
-                      label: const Text(
-                        'Call 999',
-                        style: TextStyle(
+                                            label: Text(
+                        t('emg_call_999'),
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -184,9 +185,9 @@ class EmergencyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            const Text(
-              'Important numbers',
-              style: TextStyle(
+                        Text(
+              t('emg_important'),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
@@ -207,10 +208,10 @@ class EmergencyScreen extends StatelessWidget {
                   );
                 }
                 final docs = snapshot.data!.docs;
-                if (docs.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Center(child: Text('No numbers found')),
+                                if (docs.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(child: Text(t('emg_empty'))),
                   );
                 }
                 return Column(

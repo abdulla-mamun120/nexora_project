@@ -3,6 +3,7 @@ import '../app_colors.dart';
 import '../models/place.dart';
 import '../utils/launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../strings.dart';
 
 class AreaGuideTab extends StatefulWidget {
   final String initialCategory;
@@ -165,8 +166,8 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
                           ),
                         ),
                         Text(
-                          place.category,
-                          style: TextStyle(
+  tCat(place.category),
+  style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: color,
                           ),
@@ -190,9 +191,9 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
                     openMap(context, '${place.name}, ${place.address}');
                   },
                   icon: const Icon(Icons.map),
-                  label: const Text(
-                    'View on map',
-                    style: TextStyle(fontSize: 16),
+                                    label: Text(
+                    t('view_on_map'),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ),
@@ -287,16 +288,16 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
   }
 
   // Shown when nothing matches
-  Widget _emptyState() {
-    return const Center(
+    Widget _emptyState() {
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off, size: 60, color: AppColors.textLight),
-          SizedBox(height: 12),
+          const Icon(Icons.search_off, size: 60, color: AppColors.textLight),
+          const SizedBox(height: 12),
           Text(
-            'No places found',
-            style: TextStyle(fontSize: 16, color: AppColors.textLight),
+            t('guide_empty'),
+            style: const TextStyle(fontSize: 16, color: AppColors.textLight),
           ),
         ],
       ),
@@ -317,9 +318,9 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(width: 48),
-                const Text(
-                  'Area Guide',
-                  style: TextStyle(
+                               Text(
+                  t('guide_title'),
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark,
@@ -370,7 +371,7 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
                   });
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search by name, type or address',
+                                    hintText: t('guide_search'),
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: Colors.white,
@@ -394,7 +395,7 @@ class _AreaGuideTabState extends State<AreaGuideTab> {
                 final category = _categories[index];
                 final selected = category == _selectedCategory;
                 return ChoiceChip(
-                  label: Text(category),
+                                    label: Text(tCat(category)),
                   selected: selected,
                   showCheckmark: false,
                   selectedColor: AppColors.navy,

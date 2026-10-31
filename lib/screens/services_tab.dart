@@ -3,6 +3,7 @@ import '../app_colors.dart';
 import '../models/service_contact.dart';
 import '../utils/launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../strings.dart';
 
 class ServicesTab extends StatefulWidget {
   final String initialCategory;
@@ -145,8 +146,8 @@ class _ServicesTabState extends State<ServicesTab> {
                   ),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  service.category,
+                                Text(
+                  tCat(service.category),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -204,15 +205,15 @@ class _ServicesTabState extends State<ServicesTab> {
 
   // Shown when nothing matches
   Widget _emptyState() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off, size: 60, color: AppColors.textLight),
-          SizedBox(height: 12),
+          const Icon(Icons.search_off, size: 60, color: AppColors.textLight),
+          const SizedBox(height: 12),
           Text(
-            'No services found',
-            style: TextStyle(fontSize: 16, color: AppColors.textLight),
+            t('services_empty'),
+            style: const TextStyle(fontSize: 16, color: AppColors.textLight),
           ),
         ],
       ),
@@ -233,9 +234,9 @@ class _ServicesTabState extends State<ServicesTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(width: 48),
-                const Text(
-                  'Local Services',
-                  style: TextStyle(
+                                Text(
+                  t('services_title'),
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark,
@@ -286,7 +287,7 @@ class _ServicesTabState extends State<ServicesTab> {
                   });
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search by name, service or area',
+                                    hintText: t('services_search'),
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: Colors.white,
@@ -310,7 +311,7 @@ class _ServicesTabState extends State<ServicesTab> {
                 final category = _categories[index];
                 final selected = category == _selectedCategory;
                 return ChoiceChip(
-                  label: Text(category),
+                                    label: Text(tCat(category)),
                   selected: selected,
                   showCheckmark: false,
                   selectedColor: AppColors.navy,

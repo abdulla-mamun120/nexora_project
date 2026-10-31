@@ -3,12 +3,16 @@ import 'app_colors.dart';
 import 'screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'screens/main_screen.dart';
+import 'app_language.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+    await AppLanguage.load();
   runApp(const NexoraApp());
 }
 
@@ -17,8 +21,12 @@ class NexoraApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Nexora',
+    return ValueListenableBuilder<String>(
+      valueListenable: AppLanguage.current,
+      builder: (context, language, child) {
+        return MaterialApp(
+          key: ValueKey(language),
+          title: 'Nexora',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -48,7 +56,12 @@ class NexoraApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const WelcomeScreen(),
+      // If the user is already logged in, go straight to the main screen
+home: FirebaseAuth.instance.currentUser == null
+    ? const WelcomeScreen()
+    : const MainScreen(),
+    );
+      },
     );
   }
 }

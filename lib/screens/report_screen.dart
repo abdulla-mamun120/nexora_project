@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/user_service.dart';
+import '../services/report_service.dart';
+import '../strings.dart';
 
 // One report category (name, icon, color)
 class ReportCategory {
@@ -190,20 +192,19 @@ class _ReportScreenState extends State<ReportScreen> {
           child: const Icon(Icons.lock, size: 64, color: AppColors.primary),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Verification required',
-          style: TextStyle(
+                Text(
+          t('rep_locked_title'),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: AppColors.textDark,
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'To stop false and spam reports, only verified residents of this '
-          'area can report problems.',
+                Text(
+          t('rep_locked_text'),
           textAlign: TextAlign.center,
-          style: TextStyle(height: 1.5, color: AppColors.textLight),
+          style: const TextStyle(height: 1.5, color: AppColors.textLight),
         ),
         const SizedBox(height: 24),
         Container(
@@ -223,10 +224,10 @@ class _ReportScreenState extends State<ReportScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _sectionTitle('How to get verified'),
-              _step('1', 'Send your house number, block and phone number'),
-              _step('2', 'The admin checks your details'),
-              _step('3', 'You get the Verified badge and can report'),
+                           _sectionTitle(t('rep_how_verified')),
+              _step('1', t('rep_step1')),
+              _step('2', t('rep_step2')),
+              _step('3', t('rep_step3')),
             ],
           ),
         ),
@@ -237,9 +238,9 @@ class _ReportScreenState extends State<ReportScreen> {
           child: ElevatedButton.icon(
             onPressed: _openVerificationForm,
             icon: const Icon(Icons.verified_user_outlined),
-            label: const Text(
-              'Request Verification',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        label: Text(
+              t('rep_request_btn'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -271,29 +272,29 @@ class _ReportScreenState extends State<ReportScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Request Verification',
-                    style: TextStyle(
+                                    Text(
+                    t('rep_request_btn'),
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textDark,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'The admin will check these details.',
-                    style: TextStyle(color: AppColors.textLight),
+                                    Text(
+                    t('rep_sheet_sub'),
+                    style: const TextStyle(color: AppColors.textLight),
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _houseController,
                     decoration: _inputStyle(
-                      'House / Holding No.',
+                      t('rep_house'),
                       Icons.home_outlined,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your house number';
+                        return t('rep_err_house');
                       }
                       return null;
                     },
@@ -302,12 +303,12 @@ class _ReportScreenState extends State<ReportScreen> {
                   TextFormField(
                     controller: _blockController,
                     decoration: _inputStyle(
-                      'Road / Block',
+                      t('rep_block'),
                       Icons.location_on_outlined,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your road or block';
+                        return t('rep_err_block');
                       }
                       return null;
                     },
@@ -317,12 +318,12 @@ class _ReportScreenState extends State<ReportScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     decoration: _inputStyle(
-                      'Phone Number',
+                      t('lbl_phone_number'),
                       Icons.phone_outlined,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().length < 11) {
-                        return 'Phone number must be at least 11 digits';
+                        return t('rep_err_phone');
                       }
                       return null;
                     },
@@ -341,15 +342,15 @@ class _ReportScreenState extends State<ReportScreen> {
                           );
                           Navigator.pop(sheetContext);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Verification request sent'),
+                                                        SnackBar(
+                              content: Text(t('rep_request_sent')),
                             ),
                           );
                         }
                       },
-                      child: const Text(
-                        'Send Request',
-                        style: TextStyle(fontSize: 16),
+                                            child: Text(
+                        t('rep_send_request'),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ),
@@ -380,51 +381,21 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Verification pending',
-          style: TextStyle(
+                Text(
+          t('rep_pending_title'),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: AppColors.textDark,
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'The admin is checking your details. You can report problems '
-          'as soon as you are approved.',
+                Text(
+          t('rep_pending_text'),
           textAlign: TextAlign.center,
-          style: TextStyle(height: 1.5, color: AppColors.textLight),
+          style: const TextStyle(height: 1.5, color: AppColors.textLight),
         ),
-        const SizedBox(height: 32),
 
-        // DEMO ONLY: acts like the admin approving the request
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Column(
-            children: [
-              const Text(
-                'DEMO ONLY (will be removed when the Admin Panel is ready)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: AppColors.textLight),
-              ),
-              const SizedBox(height: 10),
-              OutlinedButton(
-                onPressed: () {
-                                   FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(UserService.uid)
-                      .update({'verification': 'verified'});
-                },
-                child: const Text('Approve as admin'),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -457,7 +428,7 @@ class _ReportScreenState extends State<ReportScreen> {
             Icon(category.icon, color: category.color, size: 28),
             const SizedBox(height: 6),
             Text(
-              category.name,
+              tCat(category.name),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -470,19 +441,49 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  void _submit() {
+    bool _submitting = false;
+
+  Future<void> _submit() async {
     final formOk = _formKey.currentState!.validate();
 
     setState(() {
       _categoryError = _selectedCategory == null;
     });
 
-    if (!formOk || _categoryError) {
+    if (!formOk || _categoryError || _submitting) {
       return;
     }
 
-    // Firebase save will be added here later
-    final ticket = 'RPT-${DateTime.now().millisecondsSinceEpoch % 10000}';
+    setState(() {
+      _submitting = true;
+    });
+
+    String ticket;
+    try {
+      ticket = await ReportService.submitReport(
+        title: _titleController.text.trim(),
+        category: _selectedCategory!,
+        priority: _priority,
+        location: _locationController.text.trim(),
+        description: _descriptionController.text.trim(),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _submitting = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+          content: Text(t('rep_submit_fail')),
+        ),
+      );
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _submitting = false;
+    });
 
     showDialog(
       context: context,
@@ -494,7 +495,7 @@ class _ReportScreenState extends State<ReportScreen> {
             color: AppColors.primary,
             size: 56,
           ),
-          title: const Text('Report submitted'),
+                    title: Text(t('rep_done_title')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -516,8 +517,8 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Status: Under review\nThe admin will check your report.',
+                            Text(
+                t('rep_done_text'),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -528,7 +529,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 Navigator.pop(dialogContext); // close dialog
                 Navigator.pop(context); // go back to Home
               },
-              child: const Text('OK'),
+                            child: Text(t('ok')),
             ),
           ],
         );
@@ -549,14 +550,14 @@ class _ReportScreenState extends State<ReportScreen> {
               color: const Color(0xFFDCFCE7),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Row(
+                        child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.verified, size: 18, color: Color(0xFF16A34A)),
-                SizedBox(width: 6),
+                const Icon(Icons.verified, size: 18, color: Color(0xFF16A34A)),
+                const SizedBox(width: 6),
                 Text(
-                  'Verified resident',
-                  style: TextStyle(
+                  t('badge_verified'),
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF16A34A),
                   ),
@@ -567,15 +568,16 @@ class _ReportScreenState extends State<ReportScreen> {
           const SizedBox(height: 20),
 
           // Title
+                  // Title
           TextFormField(
             controller: _titleController,
-            decoration: _inputStyle('Problem title', Icons.title),
+            decoration: _inputStyle(t('rep_problem_title'), Icons.title),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter a title';
+                return t('rep_err_title');
               }
               if (value.trim().length < 5) {
-                return 'Title is too short';
+                return t('rep_err_title_short');
               }
               return null;
             },
@@ -583,7 +585,7 @@ class _ReportScreenState extends State<ReportScreen> {
           const SizedBox(height: 22),
 
           // Category tiles
-          _sectionTitle('What kind of problem?'),
+                    _sectionTitle(t('rep_what_kind')),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -591,25 +593,25 @@ class _ReportScreenState extends State<ReportScreen> {
               return _categoryTile(category);
             }).toList(),
           ),
-          if (_categoryError)
-            const Padding(
-              padding: EdgeInsets.only(top: 8, left: 4),
+                    if (_categoryError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8, left: 4),
               child: Text(
-                'Please select a category',
-                style: TextStyle(color: Color(0xFFB91C1C), fontSize: 12),
+                t('rep_err_category'),
+                style: const TextStyle(color: Color(0xFFB91C1C), fontSize: 12),
               ),
             ),
           const SizedBox(height: 22),
 
           // Priority
-          _sectionTitle('How urgent is it?'),
+          _sectionTitle(t('rep_how_urgent')),
           Wrap(
             spacing: 8,
             children: _priorities.map((priority) {
               final selected = priority == _priority;
               final color = _priorityColor(priority);
               return ChoiceChip(
-                label: Text(priority),
+                                label: Text(tCat(priority)),
                 selected: selected,
                 showCheckmark: false,
                 selectedColor: color,
@@ -638,7 +640,7 @@ class _ReportScreenState extends State<ReportScreen> {
           TextFormField(
             controller: _locationController,
             decoration: _inputStyle(
-              'Location (optional)',
+              t('rep_location'),
               Icons.location_on_outlined,
             ),
           ),
@@ -649,15 +651,15 @@ class _ReportScreenState extends State<ReportScreen> {
             controller: _descriptionController,
             maxLines: 5,
             decoration: _inputStyle(
-              'Describe the problem',
+              t('rep_describe'),
               Icons.description_outlined,
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please describe the problem';
+                return t('rep_err_desc');
               }
               if (value.trim().length < 10) {
-                return 'Please write at least 10 characters';
+                return t('rep_err_desc_short');
               }
               return null;
             },
@@ -668,8 +670,8 @@ class _ReportScreenState extends State<ReportScreen> {
           GestureDetector(
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Photo upload will be added later'),
+                                SnackBar(
+                  content: Text(t('rep_photo_later')),
                 ),
               );
             },
@@ -681,17 +683,17 @@ class _ReportScreenState extends State<ReportScreen> {
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: Colors.grey.shade300),
               ),
-              child: const Column(
+                            child: Column(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.add_a_photo_outlined,
                     size: 34,
                     color: AppColors.primary,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'Add a photo (optional)',
-                    style: TextStyle(color: AppColors.textLight),
+                    t('rep_add_photo'),
+                    style: const TextStyle(color: AppColors.textLight),
                   ),
                 ],
               ),
@@ -706,9 +708,9 @@ class _ReportScreenState extends State<ReportScreen> {
             child: ElevatedButton.icon(
               onPressed: _submit,
               icon: const Icon(Icons.send),
-              label: const Text(
-                'Submit Report',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                            label: Text(
+                t('rep_submit'),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -743,9 +745,9 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget _buildPage(Widget content) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Report a Problem',
-          style: TextStyle(fontWeight: FontWeight.bold),
+               title: Text(
+          t('rep_appbar'),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -753,10 +755,10 @@ class _ReportScreenState extends State<ReportScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            _header(
+                        _header(
               Icons.campaign,
-              'Help improve your area',
-              'Report local problems to the admin',
+              t('rep_header_title'),
+              t('rep_header_sub'),
             ),
             const SizedBox(height: 24),
             content,

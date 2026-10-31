@@ -5,6 +5,7 @@ import 'notices_tab.dart';
 import 'services_tab.dart';
 import 'area_guide_tab.dart';
 import 'profile_tab.dart';
+import '../strings.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -50,31 +51,32 @@ class _MainScreenState extends State<MainScreen> {
             _category = 'All'; // tapping the bottom bar clears the shortcut
           });
         },
-        destinations: const [
+                destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppColors.primary),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home, color: AppColors.primary),
+            label: t('nav_home'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.description_outlined),
-            selectedIcon: Icon(Icons.description, color: AppColors.primary),
-            label: 'Notices',
+            icon: const Icon(Icons.description_outlined),
+            selectedIcon:
+                const Icon(Icons.description, color: AppColors.primary),
+            label: t('nav_notices'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.build_outlined),
-            selectedIcon: Icon(Icons.build, color: AppColors.primary),
-            label: 'Services',
+            icon: const Icon(Icons.build_outlined),
+            selectedIcon: const Icon(Icons.build, color: AppColors.primary),
+            label: t('nav_services'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.map_outlined),
-            selectedIcon: Icon(Icons.map, color: AppColors.primary),
-            label: 'Area Guide',
+            icon: const Icon(Icons.map_outlined),
+            selectedIcon: const Icon(Icons.map, color: AppColors.primary),
+            label: t('nav_area_guide'),
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person, color: AppColors.primary),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person, color: AppColors.primary),
+            label: t('nav_profile'),
           ),
         ],
       ),

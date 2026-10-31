@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../app_colors.dart';
+import '../strings.dart';
 import 'emergency_screen.dart';
 import 'report_screen.dart';
 import 'search_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeTab extends StatelessWidget {
   // Asks MainScreen to open another tab
@@ -52,6 +53,7 @@ class HomeTab extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -149,10 +151,10 @@ class HomeTab extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Good morning',
-                      style:
-                          TextStyle(fontSize: 14, color: AppColors.textLight),
+                    Text(
+                      t('home_greeting'),
+                      style: const TextStyle(
+                          fontSize: 14, color: AppColors.textLight),
                     ),
                     Text(
                       userName,
@@ -222,7 +224,7 @@ class HomeTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-                        // Search bar (opens the search page)
+            // Search bar (opens the search page)
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -246,13 +248,15 @@ class HomeTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.search, color: AppColors.textLight),
-                    SizedBox(width: 10),
-                    Text(
-                      'Search notices, services or places',
-                      style: TextStyle(color: AppColors.textLight),
+                    const Icon(Icons.search, color: AppColors.textLight),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        t('home_search_hint'),
+                        style: const TextStyle(color: AppColors.textLight),
+                      ),
                     ),
                   ],
                 ),
@@ -288,14 +292,14 @@ class HomeTab extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Community quick help',
-                          style: TextStyle(color: Colors.white70),
+                        Text(
+                          t('home_quick_help'),
+                          style: const TextStyle(color: Colors.white70),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Get help quickly when\nevery second counts',
-                          style: TextStyle(
+                        Text(
+                          t('home_emergency_title'),
+                          style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -313,9 +317,9 @@ class HomeTab extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Icons.phone_outlined),
-                          label: const Text(
-                            'Emergency contacts',
-                            style: TextStyle(
+                          label: Text(
+                            t('home_emergency_btn'),
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -334,9 +338,9 @@ class HomeTab extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Quick services
-            const Text(
-              'Quick services',
-              style: TextStyle(
+            Text(
+              t('home_quick_services'),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
@@ -345,22 +349,22 @@ class HomeTab extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _quickService(Icons.bolt, 'Electrician',
+                _quickService(Icons.bolt, t('svc_electrician'),
                     const Color(0xFFE0F2F1), AppColors.accent, () {
                   onGoToTab(2, 'Electrician');
                 }),
                 const SizedBox(width: 10),
-                _quickService(Icons.water_drop, 'Plumber',
+                _quickService(Icons.water_drop, t('svc_plumber'),
                     const Color(0xFFE0F2F1), AppColors.primary, () {
                   onGoToTab(2, 'Plumber');
                 }),
                 const SizedBox(width: 10),
-                _quickService(Icons.add, 'Hospital', const Color(0xFFE0F2F1),
-                    AppColors.primary, () {
+                _quickService(Icons.add, t('svc_hospital'),
+                    const Color(0xFFE0F2F1), AppColors.primary, () {
                   onGoToTab(3, 'Hospital');
                 }),
                 const SizedBox(width: 10),
-                _quickService(Icons.priority_high, 'Report',
+                _quickService(Icons.priority_high, t('svc_report'),
                     const Color(0xFFFDE8E8), Colors.red, () {
                   Navigator.push(
                     context,
@@ -377,9 +381,9 @@ class HomeTab extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Latest notices',
-                  style: TextStyle(
+                Text(
+                  t('home_latest_notices'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark,
@@ -389,9 +393,9 @@ class HomeTab extends StatelessWidget {
                   onTap: () {
                     onGoToTab(1, 'All');
                   },
-                  child: const Text(
-                    'View all',
-                    style: TextStyle(
+                  child: Text(
+                    t('home_view_all'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                     ),
@@ -407,12 +411,12 @@ class HomeTab extends StatelessWidget {
                 onGoToTab(1, 'All');
               },
               child: _noticeCard(
-                'Important',
+                t('tag_important'),
                 const Color(0xFFFFF1D6),
                 const Color(0xFFB45309),
                 '08 Oct',
-                'Scheduled water supply maintenance',
-                'Water supply will be off from 9 AM to 2 PM.',
+                t('home_notice1_title'),
+                t('home_notice1_sub'),
               ),
             ),
             GestureDetector(
@@ -420,12 +424,12 @@ class HomeTab extends StatelessWidget {
                 onGoToTab(1, 'All');
               },
               child: _noticeCard(
-                'General',
+                t('tag_general'),
                 const Color(0xFFE0F2F1),
                 AppColors.primary,
                 '06 Oct',
-                'Community meeting on Friday',
-                'All residents are invited to the area meeting.',
+                t('home_notice2_title'),
+                t('home_notice2_sub'),
               ),
             ),
           ],

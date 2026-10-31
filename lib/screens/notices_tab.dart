@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../app_colors.dart';
 import '../models/notice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/tts_service.dart';
+import '../strings.dart';
 
 class NoticesTab extends StatefulWidget {
   const NoticesTab({super.key});
@@ -103,8 +105,8 @@ class _NoticesTabState extends State<NoticesTab> {
         color: _tagBgColor(category),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        category,
+            child: Text(
+        tCat(category),
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
@@ -166,21 +168,23 @@ class _NoticesTabState extends State<NoticesTab> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    // Text-to-Speech will be added later
+                                    onPressed: () {
+                    TtsService.speak('${notice.title}. ${notice.details}');
                   },
                   icon: const Icon(Icons.volume_up),
-                  label: const Text(
-                    'Listen to this notice',
-                    style: TextStyle(fontSize: 16),
+                                    label: Text(
+                    t('listen_notice'),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ),
             ],
           ),
         );
-      },
-    );
+          },
+    ).whenComplete(() {
+      TtsService.stop();
+    });
   }
 
   // One notice card
@@ -254,16 +258,16 @@ class _NoticesTabState extends State<NoticesTab> {
   }
 
   // Shown when no notice matches
-  Widget _emptyState() {
-    return const Center(
+   Widget _emptyState() {
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.search_off, size: 60, color: AppColors.textLight),
-          SizedBox(height: 12),
+          const Icon(Icons.search_off, size: 60, color: AppColors.textLight),
+          const SizedBox(height: 12),
           Text(
-            'No notices found',
-            style: TextStyle(fontSize: 16, color: AppColors.textLight),
+            t('notices_empty'),
+            style: const TextStyle(fontSize: 16, color: AppColors.textLight),
           ),
         ],
       ),
@@ -284,9 +288,9 @@ class _NoticesTabState extends State<NoticesTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(width: 48),
-                const Text(
-                  'Notice Board',
-                  style: TextStyle(
+                                Text(
+                  t('notices_title'),
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textDark,
@@ -337,7 +341,7 @@ class _NoticesTabState extends State<NoticesTab> {
                   });
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search notices',
+                                    hintText: t('notices_search'),
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: Colors.white,
@@ -361,7 +365,7 @@ class _NoticesTabState extends State<NoticesTab> {
                 final category = _categories[index];
                 final selected = category == _selectedCategory;
                 return ChoiceChip(
-                  label: Text(category),
+                                    label: Text(tCat(category)),
                   selected: selected,
                   showCheckmark: false,
                   selectedColor: AppColors.navy,

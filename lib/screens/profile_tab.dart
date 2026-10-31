@@ -5,7 +5,9 @@ import '../app_colors.dart';
 import '../services/user_service.dart';
 import 'welcome_screen.dart';
 import 'report_screen.dart';
-import 'seed_screen.dart';
+import 'admin_screen.dart';
+import '../app_language.dart';
+import '../strings.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -21,7 +23,26 @@ class _ProfileTabState extends State<ProfileTab> {
   String _phone = '';
   String _verification = 'unverified';
   final String _area = 'Your Area, City';
-  String _language = 'English';
+    // Current app language (kept in AppLanguage)
+  String get _language => AppLanguage.current.value;
+
+    // True if this user is listed in the admins collection
+  bool _isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('admins')
+        .doc(UserService.uid)
+        .get()
+        .then((doc) {
+      if (!mounted) return;
+      setState(() {
+        _isAdmin = doc.exists;
+      });
+    });
+  }
 
   // Small badge shown in the top card
   Widget _verificationBadge() {
@@ -31,15 +52,15 @@ class _ProfileTabState extends State<ProfileTab> {
 
     if (_verification == 'verified') {
       icon = Icons.verified;
-      text = 'Verified resident';
+      text = t('badge_verified');
       color = const Color(0xFF16A34A);
     } else if (_verification == 'pending') {
       icon = Icons.hourglass_top;
-      text = 'Verification pending';
+      text = t('badge_pending');
       color = const Color(0xFFB45309);
     } else {
       icon = Icons.shield_outlined;
-      text = 'Not verified';
+      text = t('badge_not_verified');
       color = const Color(0xFFB91C1C);
     }
 
@@ -65,13 +86,9 @@ class _ProfileTabState extends State<ProfileTab> {
 
   // Subtitle of the Verification menu row
   String _verificationText() {
-    if (_verification == 'verified') {
-      return 'You can report problems';
-    }
-    if (_verification == 'pending') {
-      return 'Waiting for admin approval';
-    }
-    return 'Get verified to report problems';
+    if (_verification == 'verified') return t('verify_sub_verified');
+    if (_verification == 'pending') return t('verify_sub_pending');
+    return t('verify_sub_none');
   }
 
   // Opens the verification page
@@ -194,9 +211,9 @@ class _ProfileTabState extends State<ProfileTab> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Edit Profile',
-                style: TextStyle(
+                            Text(
+                t('menu_edit_profile'),
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textDark,
@@ -206,7 +223,7 @@ class _ProfileTabState extends State<ProfileTab> {
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'Full Name',
+                  labelText: t('lbl_full_name'),
                   prefixIcon: const Icon(Icons.person_outline),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -218,7 +235,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  labelText: 'Phone Number',
+                  labelText: t('lbl_phone_number'),
                   prefixIcon: const Icon(Icons.phone_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -243,10 +260,10 @@ class _ProfileTabState extends State<ProfileTab> {
                     Navigator.pop(sheetContext);
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile updated')),
+                                            SnackBar(content: Text(t('profile_updated'))),
                     );
                   },
-                  child: const Text('Save', style: TextStyle(fontSize: 16)),
+                                    child: Text(t('save'), style: const TextStyle(fontSize: 16)),
                 ),
               ),
             ],
@@ -259,14 +276,9 @@ class _ProfileTabState extends State<ProfileTab> {
   // One language option inside the dialog
   Widget _languageOption(BuildContext dialogContext, String language) {
     return SimpleDialogOption(
-      onPressed: () {
-        setState(() {
-          _language = language;
-        });
+            onPressed: () {
         Navigator.pop(dialogContext);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Language set to $language (demo)')),
-        );
+        AppLanguage.set(language);
       },
       child: Row(
         children: [
@@ -286,7 +298,7 @@ class _ProfileTabState extends State<ProfileTab> {
       context: context,
       builder: (dialogContext) {
         return SimpleDialog(
-          title: const Text('Choose language'),
+                    title: Text(t('choose_language')),
           children: [
             _languageOption(dialogContext, 'English'),
             _languageOption(dialogContext, 'Bangla'),
@@ -302,12 +314,12 @@ class _ProfileTabState extends State<ProfileTab> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
+                    title: Text(t('logout')),
+          content: Text(t('logout_confirm')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
+                            child: Text(t('cancel')),
             ),
             TextButton(
               onPressed: () async {
@@ -322,7 +334,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   (route) => false,
                 );
               },
-              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                            child: Text(t('logout'), style: const TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -353,9 +365,9 @@ class _ProfileTabState extends State<ProfileTab> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Text(
-              'Profile',
-              style: TextStyle(
+                        Text(
+              t('profile_title'),
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textDark,
@@ -417,11 +429,11 @@ class _ProfileTabState extends State<ProfileTab> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 child: Column(
                   children: [
-                    _infoRow(Icons.phone_outlined, 'Phone', _phone),
+                                        _infoRow(Icons.phone_outlined, t('lbl_phone'), _phone),
                     const Divider(height: 1),
-                    _infoRow(Icons.location_on_outlined, 'Area', _area),
+                    _infoRow(Icons.location_on_outlined, t('lbl_area'), _area),
                     const Divider(height: 1),
-                    _infoRow(Icons.email_outlined, 'Email', _email),
+                    _infoRow(Icons.email_outlined, t('lbl_email'), _email),
                   ],
                 ),
               ),
@@ -434,56 +446,56 @@ class _ProfileTabState extends State<ProfileTab> {
                 children: [
                   _menuTile(
                     Icons.verified_user_outlined,
-                    'Verification',
+                    t('menu_verification'),
                     _verificationText(),
                     _openVerification,
                   ),
                   const Divider(height: 1),
                   _menuTile(
                     Icons.edit_outlined,
-                    'Edit Profile',
-                    'Change your name and phone',
+                    t('menu_edit_profile'),
+                    t('menu_edit_sub'),
                     _editProfile,
                   ),
                   const Divider(height: 1),
                   _menuTile(
                     Icons.language,
-                    'Language',
+                    t('menu_language'),
                     _language,
                     _chooseLanguage,
                   ),
                   const Divider(height: 1),
                   _menuTile(
                     Icons.info_outline,
-                    'About Nexora',
+                    t('menu_about'),
                     '',
                     () {
                       showAboutDialog(
                         context: context,
                         applicationName: 'Nexora',
                         applicationVersion: '1.0.0',
-                        children: const [
-                          Text(
-                            'A digital community service platform for people living in the same area.',
-                          ),
+                                                children: [
+                          Text(t('about_text')),
                         ],
                       );
                     },
                   ),
-                                    const Divider(height: 1),
-                  _menuTile(
-                    Icons.cloud_upload_outlined,
-                    'Upload dummy data (temporary)',
-                    'Press only once',
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SeedScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                                                      if (_isAdmin) ...[
+                    const Divider(height: 1),
+                    _menuTile(
+                      Icons.admin_panel_settings_outlined,
+                      t('menu_admin'),
+                      t('menu_admin_sub'),
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AdminScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -496,7 +508,7 @@ class _ProfileTabState extends State<ProfileTab> {
               child: OutlinedButton.icon(
                 onPressed: _logout,
                 icon: const Icon(Icons.logout),
-                label: const Text('Logout', style: TextStyle(fontSize: 16)),
+                                label: Text(t('logout'), style: const TextStyle(fontSize: 16)),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red, width: 1.5),
